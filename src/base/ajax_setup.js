@@ -1,19 +1,31 @@
 define('ajax_setup', function (require) {
   var store = require('store');
-  var isIE = !!window.ActiveXObject || navigator.userAgent.indexOf('Trident') > 0;
   (function setAjax () {
     $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-      var needStore = options.needStore;
-      var storeKey = options.storeKey;
-      var storeCheck = options.storeCheck;
-      needStore = needStore ? (!isIE && store.enabled) : false;
-      if (needStore) {
-        var storeData = store.get(storeKey);
-        if (!storeData || !storeCheck(storeData)) {
-          if (options.success) {
-            options.realsuccess = options.success;
-          }
-          options.success = function (data, status, jqXHR) {
+      var dfd = $.Deferred();
+      jqXHR.done(function (data) {
+        var dataCheck = options.dataCheck;
+        if ($.isFunction(dataCheck) && !dataCheck(data)) {
+          originalOptions.url = originalOptions.backup;
+          originalOptions.dataCheck = null;
+          originalOptions.forceBackup = true;
+          dfd.rejectWith(originalOptions, arguments);
+        } else {
+          processStoreData(data);
+          dfd.resolveWith(originalOptions, arguments);
+        }
+      });
+
+      jqXHR.fail(dfd.reject);
+
+      function processStoreData (data) {
+        var needStore = options.needStore;
+        var storeKey = options.storeKey;
+        var storeCheck = options.storeCheck;
+        needStore = needStore ? store.enabled : false;
+        if (needStore) {
+          var storeData = store.get(storeKey);
+          if (!storeData || !storeCheck(storeData)) {
             if (typeof data === 'string') {
               try {
                 data = JSON.parse(data);
@@ -22,12 +34,10 @@ define('ajax_setup', function (require) {
               }
             }
             store.set(storeKey, data);
-            if (options.realsuccess) {
-              options.realsuccess(data, status, jqXHR);
-            }
-          };
+          }
         }
       }
+      
       jqXHR.retry = function (opts) {
         if (opts.timeout) {
           this.timeout = opts.timeout;
@@ -37,6 +47,7 @@ define('ajax_setup', function (require) {
         }
         return this.pipe(null, pipeFailRetry(this, opts));
       };
+      return dfd.promise(jqXHR);
     });
 
     $.ajaxTransport('+script', function (options) {
@@ -45,7 +56,7 @@ define('ajax_setup', function (require) {
       var storeCheck = options.storeCheck;
       var dataType = options.dataType;
       var forceStore = options.forceStore;
-      needStore = needStore ? (!isIE && store.enabled) : false;
+      needStore = needStore ? store.enabled : false;
       if (needStore) {
         var storeData = store.get(storeKey);
         if (storeData && (storeCheck(storeData) || forceStore)) {
@@ -67,13 +78,15 @@ define('ajax_setup', function (require) {
       var times = opts.times;
       var backup = opts.backup;
       var timeout = jqXHR.timeout;
+      var timer = null;
       return function (input, status, msg) {
         var ajaxOptions = this;
         var output = new $.Deferred();
         var retryAfter = jqXHR.getResponseHeader('Retry-After');
-
+        timer && clearTimeout(timer);
         function nextRequest(options) {
           if (options && options.url === opts.backup) {
+            options.cache = true;
             _.eventCenter.trigger(ajaxOptions.jsonpCallback + ':backup', opts.backup);
           }
           ajaxOptions.data = ajaxOptions.__data || { };
@@ -102,6 +115,10 @@ define('ajax_setup', function (require) {
           }
         }
 
+        if (ajaxOptions.forceBackup) {
+          times = 0;
+        }
+
         if (times > 0 && (!jqXHR.statusCodes || $.inArray(input.status, jqXHR.statusCodes) > -1)) {
           if (retryAfter) {
             if (isNaN(retryAfter)) {
@@ -115,16 +132,16 @@ define('ajax_setup', function (require) {
           }
 
           if (timeout !== undefined && times !== opts.times) {
-            setTimeout(nextRequest, timeout);
+            timer = setTimeout(nextRequest, timeout);
           } else {
             nextRequest();
           }
         } else {
           if (times === 0) {
             if (typeof backup === 'string' && backup.length > 0) {
-              setTimeout($.proxy(nextRequest, null, {
+              nextRequest({
                 url: backup
-              }), timeout);
+              });
             } else {
               useStore();
             }

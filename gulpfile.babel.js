@@ -22,7 +22,7 @@ const CDN = {
 };
 
 var argv = require('yargs').argv;
-var cdn = argv.cdn ? CDN[argv.cdn] : CDN.STATIC;
+var cdn = argv.cdn ? CDN[argv.cdn] : CDN.static;
 
 gulp.task('build', ['base'], () => {
   return gulp.src([`./${DIRS.SRC}/base/*.js`, `./${DIRS.SRC}/components/**/*.js`])
@@ -84,6 +84,7 @@ gulp.task('base', ['component'],() => {
     `./${DIRS.SRC}/base/store.js`,
     `./${DIRS.SRC}/base/tmpl.js`,
     `./${DIRS.SRC}/base/console.js`,
+    `./${DIRS.SRC}/base/report.js`,
     `./${DIRS.SRC}/base/ajax_setup.js`,
     `./${DIRS.SRC}/base/load_async.js`
   ];

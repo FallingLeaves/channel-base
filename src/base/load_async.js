@@ -1,6 +1,6 @@
-define('load_async',['ajax_setup'], function (require) {
+define('load_async', ['ajax_setup'], function (require) {
   require('ajax_setup');
-  return function loadAsync (opts) {
+  return function loadAsync(opts) {
     opts = $.extend({
       url: '',
       params: {},
@@ -9,21 +9,34 @@ define('load_async',['ajax_setup'], function (require) {
       backup: null,
       needStore: false,
       storeSign: null,
+      cache: false,
+      dataCheck: null,
       dataType: 'jsonp',
       type: 'get',
       scriptCharset: 'UTF-8'
     }, opts);
+    var getParams = function (params) {
+      var _params = params;
+      if (/forcebot/i.test(location.href)) {
+        _params = $.extend({
+          forceBot: 1
+        }, _params);
+      }
+      return _params;
+    }
     return $.ajax({
       type: opts.type,
       url: opts.url,
       scriptCharset: opts.scriptCharset,
       originalUrl: opts.url,
-      data: opts.params,
-      __data: opts.params,
+      data: getParams(opts.params),
+      __data: getParams(opts.params),
       dataType: opts.dataType,
       jsonp: 'callback',
       jsonpCallback: opts.jsonpCallback,
+      cache: opts.cache,
       timeout: opts.timeout,
+      dataCheck: opts.dataCheck,
       storeKey: opts.url,
       needStore: opts.needStore,
       storeCheck: function (storeData) {
