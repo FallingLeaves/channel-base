@@ -189,7 +189,7 @@ define('tab', function () {
      */
     switchToPrev: function () {
       var index = this.index - 1;
-      if (index <= 0) {
+      if (index < 0) {
         index = this.tabLength - 1;
       }
       this.switchTo(index);
