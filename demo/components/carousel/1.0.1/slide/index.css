@@ -1,0 +1,199 @@
+.mod_w {
+    width: 1190px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.o2_mini .mod_w {
+    width: 990px;
+}
+
+.threetpl_sale {
+    height: 305px;
+    margin-bottom: 30px;
+}
+
+.threetpl_sale_hd {
+    position: relative;
+    padding: 0 20px 0 30px;
+    height: 55px;
+    line-height: 55px;
+    color: #fff;
+    background: #dd182b;
+}
+
+.threetpl_sale_hd_icon {
+    float: left;
+    margin-top: 8px;
+    margin-right: 8px;
+    background: url(images/time_icon@1x.png) 0 0 no-repeat;
+    width: 34px;
+    height: 40px;
+}
+.threetpl_sale_tit {
+    float: left;
+    font-family: fzzhengheis-el-gbregular;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 40px;
+    height: 40px;
+    padding-top: 9px;
+}
+
+.threetpl_sale_carousel {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+    background-color: #fff;
+}
+.threetpl_sale_carousel_main {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+    .threetpl_sale_list {
+        float: left;
+        width: 1200px;
+        padding: 12px 0 13px;
+    }
+    .o2_mini .threetpl_sale_list {
+        width: 1000px;
+    }
+
+    .threetpl_sale_item {
+        float: left;
+        width: 170px;
+        height: 225px;
+        padding: 0 14px 0 15px;
+        border-right: 1px solid #e7e7e7;
+    }
+        .tsi_pic {
+            position: relative;
+            text-align: center;
+        }
+        .tsi_item_tag {
+            position: absolute;
+            top: 0;
+            left: 0;
+            text-align: center;
+            background: url(images/tag@1x.png) 0 0 no-repeat;
+            width: 30px;
+            height: 40px;
+            z-index: 1;
+        }
+            .mod_ver {
+                display: inline-block;
+                width: 0;
+                height: 100%;
+                vertical-align: middle;
+                font-size: 0;
+            }
+            .tsi_item_tag_txt {
+                font-size: 12px;
+                color: #fff;
+                line-height: 14px;
+                display: inline-block;
+                vertical-align: 2px;
+                padding-top: 2px;
+            }
+        .tsi_pic_lk {
+            display: block;
+            outline: 0;
+        }
+
+            .tsi_img {
+                width: 130px;
+                height: 130px;
+                margin: 17px 0;
+                transition: -webkit-transform .4s ease;
+            }
+            .tsi_pic_lk:hover .tsi_img {
+                transform: translateY(-5px);
+            }
+
+            .tsi_name {
+                color: #999;
+                display: block;
+                max-width: 100%;
+                _width: 100%;
+                overflow: hidden;
+                font-size: 12px;
+                text-align: left;
+                height: 32px;
+                line-height: 16px;
+                word-wrap: break-word;
+                word-break: break-all;
+                transition: -webkit-transform .4s ease;
+            }
+            .tsi_pic_lk:hover .tsi_name {
+                color: #dd182b;
+            }
+
+            .tsi_shadow {
+                position: absolute;
+                left: 0;
+                top: 130px;
+                text-align: center;
+                background: url(images/goods_shadow@1x.png) 0 0 no-repeat;
+                width: 170px;
+                height: 20px;
+            }
+        .tsi_price {
+            padding: 3px 0;
+            height: 25px;
+        }
+
+        .tsi_price_new {
+            font-size: 18px;
+            font-weight: 700;
+            margin-right: 8px;
+            color: #f10214;
+        }
+        .tsi_price_origin {
+            color: #999;
+            font-size: 12px;
+        }
+
+    /* 轮播前后按钮 */
+    .threetpl_sale_btns {
+        display: none;
+    }
+    .threetpl_sale_carousel:hover .threetpl_sale_btns {
+        display: block;
+    }
+    .threetpl_sale_prev,
+    .threetpl_sale_next {
+        display: block;
+        position: absolute;
+        top: 50%;
+        width: 20px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        margin-top: -25px;
+        font-size: 14px;
+        color: #666;
+        background: #f1f1f1;
+        background: rgba(0,0,0,.1);
+        z-index: 5;
+    }
+
+    .threetpl_sale_prev {
+        left: 0;
+    }
+    .threetpl_sale_next {
+        right: 0;
+    }
+
+@media screen and (-webkit-device-pixel-ratio: 2) {
+    .threetpl_sale_hd_icon {
+        background: url(images/time_icon@2x.png) 0 0 no-repeat;
+    }
+    .tsi_item_tag {
+        background: url(images/tag@2x.png) 0 0 no-repeat;
+    }
+    .tsi_shadow {
+        background: url(images/goods_shadow@2x.png) 0 0 no-repeat;
+    }
+}

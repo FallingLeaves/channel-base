@@ -16,26 +16,29 @@ define(function (require) {
       mainId: '#categorys-mini',
       el: '#categorys-mini-main'
     });
-
+    var localTemplates = {};
     //绑定渲染事件
     $('body').o2lazyload().bind('render', '.o2data-lazyload', function(e, result) {
-      var self = $(e.target);
-      var template = self.find('[type="text/template"]');
-      var script = self.data('script') || '';
       var content = '';
-      var _data = window.data[self.data('id')] || {};
-      if (typeof result === 'object') {
-        content = result.dom;
+      var self = $(e.target);
+      var dataId = self.data('id');
+      var script = self.data('script') || '';
+      var _data = window.data[dataId] || {};
+      if (localTemplates[dataId]) {
+        content = localTemplates[dataId];
       } else {
-        content = template.html();
+        var template = self.find('[type="text/template"]');
+        if (typeof result === 'object') {
+          content = result.dom;
+        } else {
+          content = template.html();
+        }
+        localTemplates[dataId] = content;
       }
-
       //加载模板引擎
       var o2tpl = require('o2tpl');
       try {
         var html = o2tpl(content, _data);
-        //template.remove();
-        //self.append($(html));
         self.html(html);
         setTimeout(function(){
           //触发脚本
