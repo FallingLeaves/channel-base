@@ -53,7 +53,7 @@ define('countdown', function (require) {
      * @param {Function} [options.stateCallback=null] 倒计时回调
      */
     construct: function (options) {
-      var def = {
+      $.extend(this, {
         startTime: new Date(), //开始时间
         endTime: new Date(), //结束时间
         state: 1, //当前状态
@@ -73,9 +73,7 @@ define('countdown', function (require) {
         },
         timer: null //定时器
 
-      }
-
-      $.extend(this, def, options || {});
+      }, options || {});
       this.autoStart && this.init();
     },
 
@@ -111,7 +109,7 @@ define('countdown', function (require) {
       var cfgst = this.startTime;
       var cfget = this.endTime;
       var interval = this.interval;
-      var ot = interval + (interval - offset);
+      var ot = Math.min(interval,(interval + (interval - offset)));
       if ('[object Array]' !== Object.prototype.toString.call(cfgst)) {
         cfgst = [cfgst];
         cfget = [cfget];
@@ -151,8 +149,9 @@ define('countdown', function (require) {
         }
         datas.push(data);
       }
-      this.stateCallback && this.stateCallback(datas.length === 1 ? datas[0] : datas);
-      this.timer = setTimeout($.proxy(this.update, this, now), ot < 0 ? 0 : ot);
+      this.stateCallback && this.stateCallback.call(this,datas.length === 1 ? datas[0] : datas);
+       clearTimeout(this.timer);
+       this.timer = setTimeout($.proxy(this.update, this, now), Math.max(0, ot));
     },
     pad: function (value, n) {
       return (Array(n).join(0) + value).slice(-n);

@@ -57,13 +57,11 @@
     }];
     /* 单个时间 */
     var $dom = $('#single_time').children().eq(0).find('.time_value');
-    var cd = new CountDown({
+    var cd1 = new CountDown({
         startTime: schedules[2].start,
         endTime: schedules[2].end,
         stateCallback: function(data) {
-            console.log(data);
           var t = [data.hour, data.minute, data.second].join(' : ');
-
             //根据状态设置界面
             switch (data.state) {
                 case 0:
