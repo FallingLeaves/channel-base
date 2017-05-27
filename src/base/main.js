@@ -46,7 +46,7 @@ define(function (require) {
           '' !== script && (new Function(script)).call(self);
           $(window).trigger('resize');
         },0);
-        
+
       } catch (e) {
         console.log(e);
       }

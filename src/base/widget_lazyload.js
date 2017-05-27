@@ -157,15 +157,13 @@ define('o2widgetLazyload', function (require, exports, module) {
        * @param dtd {Deferred}
        */
     var triggerRender = function (dom, content, async, tpl, dtd) {
-      if (async) {
         if (dom.data('events') && dom.data('events')['beforerender']) {
           dom.html(content).addClass('o2loading').trigger('beforerender', function () {
             processRender(dom, content, tpl, dtd);
           });
+        } else {
+          dom.addClass('o2loading') && processRender(dom, content, tpl, dtd);
         }
-      } else {
-        dom.addClass('o2loading') && processRender(dom, content, tpl, dtd);
-      }
     }
     init();
     this.detectRender = detectRender
