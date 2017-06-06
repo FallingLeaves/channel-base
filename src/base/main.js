@@ -54,5 +54,17 @@ define(function (require) {
     //楼层懒加载逻辑
     var o2widgetLazyload = require('o2widgetLazyload');
     window.o2widgetLazyload = new o2widgetLazyload();
+    if ('undefined' === typeof(pageConfig.processImageUrl)) {
+       pageConfig.processImageUrl = function (imageUrl, retina, normal) {
+        if (!imageUrl) {
+          return '';
+        }
+        var imgResize = pageConfig.isRetina ? '/s' + retina + '_jfs/' : '/s' + normal + '_jfs/';
+        imageUrl = imageUrl.replace(/http(s?):/, '');
+        return imageUrl.replace(/http(s?):/, '').replace(/\/[^/]*?jfs\//, function () {
+        return imgResize;
+        });
+      };
+    }
   });
 });
