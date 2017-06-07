@@ -45,6 +45,9 @@ define('ajax_setup', function (require) {
         if (opts.statusCodes) {
           this.statusCodes = opts.statusCodes;
         }
+        if (opts.backup && !$.isArray(opts.backup)) {
+          opts.backup = [opts.backup];
+        }
         return this.pipe(null, pipeFailRetry(this, opts));
       };
       return dfd.promise(jqXHR);
@@ -76,7 +79,6 @@ define('ajax_setup', function (require) {
 
     function pipeFailRetry(jqXHR, opts) {
       var times = opts.times;
-      var backup = opts.backup;
       var timeout = jqXHR.timeout;
       var timer = null;
       return function (input, status, msg) {
@@ -85,9 +87,9 @@ define('ajax_setup', function (require) {
         var retryAfter = jqXHR.getResponseHeader('Retry-After');
         timer && clearTimeout(timer);
         function nextRequest(options) {
-          if (options && options.url === opts.backup) {
+          if (options.isBackup) {
             options.cache = true;
-            _.eventCenter.trigger(ajaxOptions.jsonpCallback + ':backup', opts.backup);
+            _.eventCenter.trigger(ajaxOptions.jsonpCallback + ':backup', options.url);
           }
           ajaxOptions.data = ajaxOptions.__data || { };
           $.extend(ajaxOptions, {
@@ -96,10 +98,10 @@ define('ajax_setup', function (require) {
           }, options);
           $.ajax(ajaxOptions)
             .retry({
-              times: times - 1,
+              times: options.times,
               timeout: opts.timeout,
               statusCodes: opts.statusCodes,
-              backup: backup
+              backup: opts.backup
             })
             .pipe(output.resolve, output.reject);
         }
@@ -108,7 +110,8 @@ define('ajax_setup', function (require) {
           var storeData = store.get(ajaxOptions.storeKey);
           if (storeData) {
             nextRequest({
-              forceStore: true
+              forceStore: true,
+              times: 0
             });
           } else {
             output.rejectWith(this, arguments);
@@ -130,25 +133,28 @@ define('ajax_setup', function (require) {
               timeout = jqXHR.timeout;
             }
           }
-
           if (timeout !== undefined && times !== opts.times) {
-            timer = setTimeout(nextRequest, timeout);
+            timer = setTimeout(function () {
+              nextRequest({
+                times: times - 1
+              });
+            }, timeout);
           } else {
-            nextRequest();
+            nextRequest({
+              times: times - 1
+            });
           }
         } else {
           if (times === 0) {
-            if (typeof backup === 'string' && backup.length > 0) {
+            if (opts.backup && opts.backup.length) {
               nextRequest({
-                url: backup
+                url: opts.backup.shift(),
+                times: 0,
+                isBackup: true
               });
             } else {
               useStore();
             }
-          } else if (times === -1) {
-            useStore();
-          } else {
-            output.rejectWith(this, arguments);
           }
         }
         return output;
