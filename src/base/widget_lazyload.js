@@ -23,7 +23,7 @@ define('o2widgetLazyload', function (require, exports, module) {
     var preloadOffset = isIE ? 1000 : 500;
     var channelReady = false;
     var classes = conf.defCls.concat(conf.cls).join(' ');
-    preloadOffset = o2JSConfig.preloadOffset ? o2JSConfig.preloadOffset : preloadOffset;
+    preloadOffset = 'number' === typeof o2JSConfig.preloadOffset ? o2JSConfig.preloadOffset : preloadOffset;
     var ieStorage = o2JSConfig.ieStorage ? o2JSConfig.ieStorage : false;
     var isStore = ieStorage && isSupportLS;
     var init = function () {

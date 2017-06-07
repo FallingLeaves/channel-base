@@ -100,6 +100,6 @@ gulp.task('base', ['component'],() => {
       gulp.src(CHANNEL_FILES)
         .pipe($.concat('channel.js'))
         .pipe($.uglify().on('error', console.log))
-        .pipe(gulp.dest(`./${DIRS.DEST}/base/1.0.0/`));
+        .pipe(gulp.dest(`./${DIRS.DEST}/base/1.0.1/`));
     });
 });
