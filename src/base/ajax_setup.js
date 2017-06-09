@@ -45,8 +45,12 @@ define('ajax_setup', function (require) {
         if (opts.statusCodes) {
           this.statusCodes = opts.statusCodes;
         }
-        if (opts.backup && !$.isArray(opts.backup)) {
-          opts.backup = [opts.backup];
+        if (opts.backup) {
+          if (!$.isArray(opts.backup)) {
+            opts.backup = [opts.backup];
+          } else {
+            opts.backup = Array.prototype.slice.call(opts.backup);
+          }
         }
         return this.pipe(null, pipeFailRetry(this, opts));
       };
