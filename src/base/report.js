@@ -65,7 +65,8 @@
       }
 
       if (ratio > 0 && rndNum >= 0 && rndNum <= ratio && speed > 0) { // 忽略速度为0
-        return 's' + this.getRank() + '=' + speed;
+        // 加上节点50，所有速度上报
+        return 's' + this.getRank() + '=' + speed + '&s50=' + speed;
       }
 
       return '';
