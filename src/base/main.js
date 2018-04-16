@@ -8,6 +8,20 @@ define(function (require) {
   // console 输出
   var o2console = require('o2console');
   o2console.consoleConfigFunc();
+  // 尾部提前加载css，再加载tpl
+  if ($('#cmsfooter').length) {
+    $('#cmsfooter').bind('beforerender',function(ev,next){
+      $(this).css('visibility','hidden');
+      next();
+    }).bind('done',function(){
+      var that = this;
+      var cssLink = $(that).data('script');
+      cssLink = cssLink.match(/\/\/.*.css/)[0];
+      seajs.use(cssLink,function(){
+        $(that).css('visibility','');
+      });
+    });
+  }
   // 加载主站头部公共脚本
 	require.async(['jdf/1.0.0/unit/globalInit/5.0.0/globalInit.js', 'jdf/1.0.0/unit/category/2.0.0/category.js', '//static.360buyimg.com/mtd/pc/components/1.0.0/lazyload/lazyload.js'], function(globalInit, category, lazyload) {
     globalInit();

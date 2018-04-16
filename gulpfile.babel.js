@@ -90,7 +90,8 @@ gulp.task('base', ['component'],() => {
   ];
   const CHANNEL_FILES = [
     `./${DIRS.SRC}/base/widget_lazyload.js`,
-    `./${DIRS.SRC}/base/main.js`
+    `./${DIRS.SRC}/base/main.js`,
+    `./${DIRS.SRC}/base/o2_mod_xinren_bottom.js`
   ];
   return gulp.src(BASE_FILES)
     .pipe($.concat('base.js'))
