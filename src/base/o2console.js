@@ -16,9 +16,10 @@ define('o2console', function () {
       // 只展示chrome
       if(window.console && console.log && navigator.userAgent.toLowerCase().match(/chrome\/([\d.]+)/)) {
         var consoleConfig = (typeof o2ConsoleConfig !== 'undefined') ? o2ConsoleConfig : this.consoleConfig;
-        var styleBold = 'font-weight: bold;color: #6190e8;';
-        var styleNormal = 'font-size: 12px;color: #6190e8;';
-        console.log(consoleConfig.staff + consoleConfig.freshTec + consoleConfig.funExp, 'color: #6190e8;', styleBold, styleNormal, styleBold, styleNormal, styleBold, styleNormal, styleBold, styleNormal);
+        var consoleInfo = consoleConfig.staff + consoleConfig.freshTec + consoleConfig.funExp;
+        consoleInfo = consoleInfo.replace(/%c/g, '');
+        consoleInfo = '%c' + consoleInfo;
+        console.log(consoleInfo,"color: #6190e8;");
       }
     }
   };
